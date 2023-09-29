@@ -3,6 +3,7 @@ from transformers import DataCollatorForLanguageModeling
 from transformers import AutoModelForMaskedLM
 from transformers import Trainer, TrainingArguments, pipeline
 import torch
+from torch.utils.data import DataLoader, Dataset
 
 import math
 import pandas as pd
@@ -41,11 +42,11 @@ tokenizer = AutoTokenizer.from_pretrained("distilroberta-base")
 # tokenised_data = train_set.apply(preprocess_function, axis=1)
 
 # Tokenize the text from the DataFrame column individually
-tokenized_train_data = []
-for example in train_set['text']:
-    tokens = tokenizer(example, padding=True, truncation=True)
-    tokenized_train_data.append(tokens)
-#
+# tokenized_train_data = []
+# for example in train_set['text']:
+#     tokens = tokenizer(example, padding=True, truncation=True)
+#     tokenized_train_data.append(tokens)
+# #
 # tokenized_test_data = []
 # for example in test_set['text']:
 #     tokens = tokenizer(example, padding=True, truncation=True)
@@ -77,63 +78,89 @@ for example in train_set['text']:
 #     processed_data.append(processed_text)
 # #
 # print(processed_data)
+def split_text_into_chunks(text, max_chunk_length):
+    if isinstance(text, str):  # Check if the value is a string and not NaN/None
+        chunks = []
+        for i in range(0, len(text), max_chunk_length):
+            chunks.append(text[i:i + max_chunk_length])
+        return chunks
+    else:
+        return []
 
-# def tokenize_text(text):
-#     return tokenizer.encode(text, add_special_tokens=True)
-
-train_set['tokenized_text'] = tokenized_train_data
-
-import random
-
-
-def mask_word(tokens):
-    masked_tokens = tokens.copy()
-    mask_positions = []
-
-    for i, token_id in enumerate(masked_tokens):
-        if random.random() < 0.15:  # 15% probability of masking
-            masked_tokens[i] = tokenizer.mask_token_id
-            mask_positions.append(i)
-
-    return masked_tokens, mask_positions
+# Initialize a tokenizer and model (you can replace 'bert-base-uncased' with any other model)
+model = AutoModelForMaskedLM.from_pretrained('bert-base-uncased')
 
 
-train_set['masked_text'], train_set['mask_positions'] = zip(*train_set['tokenized_text'].apply(mask_word))
+# Tokenize and process each text chunk in the DataFrame
+def tokenize_and_process_text(text):
+    text_chunks = split_text_into_chunks(text, max_sequence_length)
+    tokenized_chunks = []
 
-# Prepare data for training
-input_ids = torch.tensor(train_set['masked_text'].tolist())
-mask_positions = torch.tensor(train_set['mask_positions'].tolist())
+    for text_chunk in text_chunks:
+        tokenized_chunk = tokenizer.encode(text_chunk, add_special_tokens=True, max_length=max_sequence_length,
+                                           truncation=True)
+        tokenized_chunks.append(tokenized_chunk)
 
-dataset = torch.utils.data.TensorDataset(input_ids, mask_positions)
+    return tokenized_chunks
 
-tokenizer.pad_token = tokenizer.eos_token
-data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=0.15)
 
-model = AutoModelForMaskedLM.from_pretrained("distilroberta-base")
+# Define the maximum sequence length for the model
+max_sequence_length = 512
 
+# Apply tokenization and processing to the 'text' column
+train_set['tokenized_text'] = train_set['text'].apply(tokenize_and_process_text)
+
+# Flatten the 'tokenized_text' column into a single list of tokens
+tokenized_text = [token for chunk in train_set['tokenized_text'] if chunk for token in chunk]
+
+# Create a custom dataset for MLM training
+class CustomDataset(Dataset):
+    def __init__(self, tokenized_text, tokenizer, max_sequence_length):
+        self.inputs = tokenized_text
+        self.tokenizer = tokenizer
+        self.max_sequence_length = max_sequence_length
+
+    def __len__(self):
+        return len(self.inputs)
+
+    def __getitem__(self, idx):
+        input_ids = self.inputs[idx]
+        return {
+            "input_ids": input_ids,
+            "attention_mask": [1] * len(input_ids),  # All tokens are attended to
+        }
+
+# Create a DataLoader for the custom dataset
+dataset = CustomDataset(tokenized_text, tokenizer, max_sequence_length)
+data_collator = DataCollatorForLanguageModeling(
+    tokenizer=tokenizer, mlm=True, mlm_probability=0.15
+)
+dataloader = DataLoader(dataset, batch_size=4, collate_fn=data_collator)
+
+# Define training arguments
 training_args = TrainingArguments(
-    output_dir='./mlm_model',
+    output_dir="./mlm_model",
     overwrite_output_dir=True,
-    num_train_epochs=1,
-    per_device_train_batch_size=2,
-    save_steps=10_000,
-    save_total_limit=2,
+    num_train_epochs=3,  # Adjust as needed
+    per_device_train_batch_size=4,  # Adjust as needed
+    save_steps=10,  # Adjust as needed
+    save_total_limit=2,  # Adjust as needed
+    logging_dir="./logs",
+    logging_steps=10,  # Adjust as needed
 )
 
+# Create a DataLoader for training
+train_dataloader = DataLoader(dataset, batch_size=training_args.per_device_train_batch_size, collate_fn=data_collator)
+
+# Initialize a Trainer and start training
 trainer = Trainer(
     model=model,
     args=training_args,
-    data_collator=data_collator,  # Pass DataCollatorForLanguageModeling
-    train_dataset=input_ids,  # Pass the tokenized text data directly
-    # eval_dataset=input_ids_test,
+    data_collator=data_collator,
+    train_dataset=train_dataloader,  # Use the DataLoader for training
 )
 
 trainer.train()
-#
-#
-# eval_results = trainer.evaluate()
-# print(f"Perplexity: {math.exp(eval_results['eval_loss']):.2f}")
-
 
 # Use the trained model to predict masked words
 fill_mask = pipeline(task='fill-mask', model=model, tokenizer=tokenizer)
@@ -141,3 +168,9 @@ results = fill_mask("The [MASK] brown fox jumps over the lazy dog.")
 
 for result in results:
     print(f"Predicted word: {result['token_str']} (Score: {result['score']:.4f})")
+
+
+# tokenized_train_data = []
+# for example in train_set['text']:
+#     tokens = tokenizer(example, padding=True, truncation=True)
+#     tokenized_train_data.append(tokens)
