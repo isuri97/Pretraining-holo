@@ -6,7 +6,7 @@ from transformers import Trainer, TrainingArguments, pipeline
 import math
 import pandas as pd
 
-df1 = pd.read_csv('data/clean-ushmm.csv')
+# df1 = pd.read_csv('data/clean-ushmm.csv')
 df2 = pd.read_csv('data/wiener_novermberdown_2.csv')
 df3 = pd.read_csv('data/yale-good.csv')
 
@@ -16,8 +16,8 @@ half_length2 = len(df3) // 2
 # Take training half of the data from each DataFrame
 half_df1 = df2.iloc[:half_length1]
 half_df2 = df3.iloc[:half_length2]
-train_df = pd.concat([half_df1['text'], half_df2['text'], df1['text']], axis=0, ignore_index=True)
-# train_df = pd.concat([half_df1['text'], half_df2['text']] , axis=0, ignore_index=True)
+# train_df = pd.concat([half_df1['text'], half_df2['text'], df1['text']], axis=0, ignore_index=True)
+train_df = pd.concat([half_df1['text'], half_df2['text']] , axis=0, ignore_index=True)
 
 header = 'text'
 combined_series = train_df.rename(header)
@@ -26,35 +26,33 @@ train_set = pd.DataFrame(combined_series)
 print(train_set)
 
 # testing half
-second_half_df = df2.iloc[half_length1:]
-third_half_df = df3.iloc[half_length2:]
-test_df = pd.concat([second_half_df['text'], third_half_df['text']], axis=0, ignore_index=True)
-header = 'text'
-combined_series = test_df.rename(header)
-test_set = pd.DataFrame(combined_series)
+# second_half_df = df2.iloc[half_length1:]
+# third_half_df = df3.iloc[half_length2:]
+# test_df = pd.concat([second_half_df['text'], third_half_df['text']], axis=0, ignore_index=True)
+# header = 'text'
+# combined_series = test_df.rename(header)
+# test_set = pd.DataFrame(combined_series)
 
 # pretraining the model
 tokenizer = AutoTokenizer.from_pretrained("distilroberta-base")
 
 # def preprocess_function(examples):
 #     return tokenizer(examples, padding=True, truncation=True)
-
 # tokenised_data = train_set.apply(preprocess_function, axis=1)
 
 # Tokenize the text from the DataFrame column individually
-
 tokenized_train_data = []
 for example in train_set['text']:
     tokens = tokenizer(example, padding=True, truncation=True)
     tokenized_train_data.append(tokens)
-
-tokenized_test_data = []
-for example in test_set['text']:
-    tokens = tokenizer(example, padding=True, truncation=True)
-    tokenized_test_data.append(tokens)
+#
+# tokenized_test_data = []
+# for example in test_set['text']:
+#     tokens = tokenizer(example, padding=True, truncation=True)
+#     tokenized_test_data.append(tokens)
 
 input_ids_train = tokenized_train_data
-input_ids_test = tokenized_test_data
+# input_ids_test = tokenized_test_data
 
 # print(tokenized_data)
 
@@ -100,11 +98,19 @@ trainer = Trainer(
     args=training_args,
     data_collator=data_collator,  # Pass DataCollatorForLanguageModeling
     train_dataset=input_ids_train,  # Pass the tokenized text data directly
-    eval_dataset=input_ids_test,
+    # eval_dataset=input_ids_test,
 )
 
 trainer.train()
 #
 #
-eval_results = trainer.evaluate()
-print(f"Perplexity: {math.exp(eval_results['eval_loss']):.2f}")
+# eval_results = trainer.evaluate()
+# print(f"Perplexity: {math.exp(eval_results['eval_loss']):.2f}")
+
+
+# Use the trained model to predict masked words
+fill_mask = pipeline(task='fill-mask', model=model, tokenizer=tokenizer)
+results = fill_mask("The [MASK] brown fox jumps over the lazy dog.")
+
+for result in results:
+    print(f"Predicted word: {result['token_str']} (Score: {result['score']:.4f})")
