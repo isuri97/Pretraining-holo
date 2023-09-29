@@ -38,8 +38,8 @@ def preprocess_function(examples):
 
 tokenised_data = train_set.apply(preprocess_function, axis=1)
 
-train_set = preprocess_function(train_df.tolist())
-test_set = preprocess_function(test_df.tolist())
+train_set = train_df['text'].apply(preprocess_function).tolist()
+test_set = test_df['text'].apply(preprocess_function).tolist()
 
 block_size = 128
 
