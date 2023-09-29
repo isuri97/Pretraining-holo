@@ -38,7 +38,7 @@ def preprocess_function(examples):
 
 # tokenised_data = train_set.apply(preprocess_function, axis=1)
 
-text_column = df['text_column']  # Replace 'text_column' with your column name
+text_column = train_set['text']  # Replace 'text_column' with your column name
 tokens = text_column.apply(preprocess_function).tolist()
 tokens = tokenizer(tokens, padding=True, truncation=True)
 
