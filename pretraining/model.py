@@ -4,9 +4,9 @@ from transformers import AutoModelForMaskedLM
 import math
 import pandas as pd
 
-df1 = pd.read_csv('clean-ushmm.csv')
-df2 = pd.read_csv('wiener_novermberdown_2.csv')
-df3 = pd.read_csv('yale-good.csv')
+df1 = pd.read_csv('data/clean-ushmm.csv')
+df2 = pd.read_csv('data/wiener_novermberdown_2.csv')
+df3 = pd.read_csv('data/yale-good.csv')
 
 
 half_length1 = len(df2) // 2
