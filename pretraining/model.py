@@ -18,7 +18,8 @@ train_df = pd.concat([half_df1['text'], half_df2['text'], df1['text']], axis=0, 
 header = 'text'
 combined_series = train_df.rename(header)
 train_set = pd.DataFrame(combined_series)
-train_set
+train_set = train_set.dropna()
+
 
 # testing half
 second_half_df = df2.iloc[half_length1:]
