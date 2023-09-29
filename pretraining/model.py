@@ -8,7 +8,6 @@ df1 = pd.read_csv('data/clean-ushmm.csv')
 df2 = pd.read_csv('data/wiener_novermberdown_2.csv')
 df3 = pd.read_csv('data/yale-good.csv')
 
-
 half_length1 = len(df2) // 2
 half_length2 = len(df3) // 2
 
