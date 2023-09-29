@@ -34,9 +34,12 @@ test_set = pd.DataFrame(combined_series)
 tokenizer = AutoTokenizer.from_pretrained("distilroberta-base")
 
 def preprocess_function(examples):
-  return tokenizer([" ".join(x) for x in train_set['text']])
+    return tokenizer(examples, padding=True, truncation=True)
 
 tokenised_data = train_set.apply(preprocess_function, axis=1)
+
+train_set = preprocess_function(train_df.tolist())
+test_set = preprocess_function(test_df.tolist())
 
 block_size = 128
 
@@ -55,7 +58,7 @@ def group_texts(examples):
     }
     return result
 
-lm_dataset = tokenised_data.map(group_texts, batched=True, num_proc=4)
+lm_dataset = train_set.map(group_texts, batched=True, num_proc=4)
 
 tokenizer.pad_token = tokenizer.eos_token
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=0.15)
