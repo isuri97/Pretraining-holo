@@ -2,11 +2,12 @@ from transformers import AutoTokenizer
 from transformers import DataCollatorForLanguageModeling
 from transformers import AutoModelForMaskedLM
 from transformers import Trainer, TrainingArguments, pipeline
+import torch
 
 import math
 import pandas as pd
 
-# df1 = pd.read_csv('data/clean-ushmm.csv')
+df1 = pd.read_csv('data/clean-ushmm.csv')
 df2 = pd.read_csv('data/wiener_novermberdown_2.csv')
 df3 = pd.read_csv('data/yale-good.csv')
 
@@ -16,13 +17,12 @@ half_length2 = len(df3) // 2
 # Take training half of the data from each DataFrame
 half_df1 = df2.iloc[:half_length1]
 half_df2 = df3.iloc[:half_length2]
-# train_df = pd.concat([half_df1['text'], half_df2['text'], df1['text']], axis=0, ignore_index=True)
-train_df = pd.concat([half_df1['text'], half_df2['text']] , axis=0, ignore_index=True)
+train_df = pd.concat([half_df1['text'], half_df2['text'], df1['text']], axis=0, ignore_index=True)
+# train_df = pd.concat([half_df1['text'], half_df2['text']] , axis=0, ignore_index=True)
 
 header = 'text'
 combined_series = train_df.rename(header)
 train_set = pd.DataFrame(combined_series)
-# train_set = train_set.dropna()
 print(train_set)
 
 # testing half
@@ -41,17 +41,17 @@ tokenizer = AutoTokenizer.from_pretrained("distilroberta-base")
 # tokenised_data = train_set.apply(preprocess_function, axis=1)
 
 # Tokenize the text from the DataFrame column individually
-tokenized_train_data = []
-for example in train_set['text']:
-    tokens = tokenizer(example, padding=True, truncation=True)
-    tokenized_train_data.append(tokens)
+# tokenized_train_data = []
+# for example in train_set['text']:
+#     tokens = tokenizer(example, padding=True, truncation=True)
+#     tokenized_train_data.append(tokens)
 #
 # tokenized_test_data = []
 # for example in test_set['text']:
 #     tokens = tokenizer(example, padding=True, truncation=True)
 #     tokenized_test_data.append(tokens)
 
-input_ids_train = tokenized_train_data
+# input_ids_train = tokenized_train_data
 # input_ids_test = tokenized_test_data
 
 # print(tokenized_data)
@@ -77,7 +77,34 @@ input_ids_train = tokenized_train_data
 #     processed_data.append(processed_text)
 # #
 # print(processed_data)
-#
+
+def tokenize_text(text):
+    return tokenizer.encode(text, add_special_tokens=True)
+
+train_set['tokenized_text'] = train_set['text'].apply(tokenize_text)
+
+import random
+
+
+def mask_word(tokens):
+    masked_tokens = tokens.copy()
+    mask_positions = []
+
+    for i, token_id in enumerate(masked_tokens):
+        if random.random() < 0.15:  # 15% probability of masking
+            masked_tokens[i] = tokenizer.mask_token_id
+            mask_positions.append(i)
+
+    return masked_tokens, mask_positions
+
+
+train_set['masked_text'], train_set['mask_positions'] = zip(*train_set['tokenized_text'].apply(mask_word))
+
+# Prepare data for training
+input_ids = torch.tensor(train_set['masked_text'].tolist())
+mask_positions = torch.tensor(train_set['mask_positions'].tolist())
+
+dataset = torch.utils.data.TensorDataset(input_ids, mask_positions)
 
 tokenizer.pad_token = tokenizer.eos_token
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=0.15)
@@ -97,7 +124,7 @@ trainer = Trainer(
     model=model,
     args=training_args,
     data_collator=data_collator,  # Pass DataCollatorForLanguageModeling
-    train_dataset=input_ids_train,  # Pass the tokenized text data directly
+    train_dataset=input_ids,  # Pass the tokenized text data directly
     # eval_dataset=input_ids_test,
 )
 
