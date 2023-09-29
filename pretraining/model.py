@@ -38,8 +38,8 @@ def preprocess_function(examples):
 
 # tokenised_data = train_set.apply(preprocess_function, axis=1)
 
-train_set = train_df['text'].apply(preprocess_function).tolist()
-test_set = test_df['text'].apply(preprocess_function).tolist()
+train_set_tokenised = train_set['text'].apply(preprocess_function).tolist()
+test_set_tokenised = test_set['text'].apply(preprocess_function).tolist()
 
 block_size = 128
 
@@ -58,7 +58,7 @@ def group_texts(examples):
     }
     return result
 
-lm_dataset = train_set.map(group_texts, batched=True, num_proc=4)
+lm_dataset = train_set_tokenised.map(group_texts, batched=True, num_proc=4)
 
 tokenizer.pad_token = tokenizer.eos_token
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=0.15)
