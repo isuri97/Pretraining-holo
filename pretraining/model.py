@@ -36,7 +36,7 @@ tokenizer = AutoTokenizer.from_pretrained("distilroberta-base")
 def preprocess_function(examples):
     return tokenizer(examples, padding=True, truncation=True)
 
-tokenised_data = train_set.apply(preprocess_function, axis=1)
+# tokenised_data = train_set.apply(preprocess_function, axis=1)
 
 train_set = train_df['text'].apply(preprocess_function).tolist()
 test_set = test_df['text'].apply(preprocess_function).tolist()
