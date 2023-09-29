@@ -41,10 +41,10 @@ tokenizer = AutoTokenizer.from_pretrained("distilroberta-base")
 # tokenised_data = train_set.apply(preprocess_function, axis=1)
 
 # Tokenize the text from the DataFrame column individually
-# tokenized_train_data = []
-# for example in train_set['text']:
-#     tokens = tokenizer(example, padding=True, truncation=True)
-#     tokenized_train_data.append(tokens)
+tokenized_train_data = []
+for example in train_set['text']:
+    tokens = tokenizer(example, padding=True, truncation=True)
+    tokenized_train_data.append(tokens)
 #
 # tokenized_test_data = []
 # for example in test_set['text']:
@@ -78,10 +78,10 @@ tokenizer = AutoTokenizer.from_pretrained("distilroberta-base")
 # #
 # print(processed_data)
 
-def tokenize_text(text):
-    return tokenizer.encode(text, add_special_tokens=True)
+# def tokenize_text(text):
+#     return tokenizer.encode(text, add_special_tokens=True)
 
-train_set['tokenized_text'] = train_set['text'].apply(tokenize_text)
+train_set['tokenized_text'] = tokenized_train_data
 
 import random
 
