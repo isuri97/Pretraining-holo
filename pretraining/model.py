@@ -157,7 +157,7 @@ trainer = Trainer(
     model=model,
     args=training_args,
     data_collator=data_collator,
-    train_dataset=train_dataloader,  # Use the DataLoader for training
+    train_dataset=dataset  # Use the DataLoader for training
 )
 
 trainer.train()
