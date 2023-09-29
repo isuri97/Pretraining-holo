@@ -4,9 +4,15 @@ from transformers import AutoModelForMaskedLM
 from transformers import Trainer, TrainingArguments, pipeline
 import torch
 from torch.utils.data import DataLoader, Dataset
-
 import math
 import pandas as pd
+import argparse
+
+
+parser = argparse.ArgumentParser(
+    description='''evaluates multiple models  ''')
+parser.add_argument('--cuda_device', required=False, help='cuda device', default=0)
+arguments = parser.parse_args()
 
 df1 = pd.read_csv('data/clean-ushmm.csv')
 df2 = pd.read_csv('data/wiener_novermberdown_2.csv')
@@ -137,6 +143,8 @@ data_collator = DataCollatorForLanguageModeling(
 )
 dataloader = DataLoader(dataset, batch_size=4, collate_fn=data_collator)
 
+cuda_device = int(arguments.cuda_device)
+
 # Define training arguments
 training_args = TrainingArguments(
     output_dir="./mlm_model",
@@ -156,8 +164,9 @@ train_dataloader = DataLoader(dataset, batch_size=training_args.per_device_train
 trainer = Trainer(
     model=model,
     args=training_args,
+    cuda_device=cuda_device,
     data_collator=data_collator,
-    train_dataset=dataset  # Use the DataLoader for training
+    train_dataset=train_dataloader  # Use the DataLoader for training
 )
 
 trainer.train()
