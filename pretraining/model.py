@@ -99,8 +99,8 @@ def split_text_into_chunks(text, max_chunk_length):
 
 #
 # # Initialize a tokenizer and model (you can replace 'bert-base-uncased' with any other model)
-model = AutoModelForMaskedLM.from_pretrained('bert-base-uncased').to(cuda_device)
-# model = AutoModelForMaskedLM.from_pretrained('bert-base-uncased')
+# model = AutoModelForMaskedLM.from_pretrained('bert-base-uncased').to(cuda_device)
+model = AutoModelForMaskedLM.from_pretrained('bert-base-uncased')
 
 # Tokenize and process each text chunk in the DataFrame
 def tokenize_and_process_text(text):
