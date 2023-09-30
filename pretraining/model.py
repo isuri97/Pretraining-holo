@@ -159,7 +159,7 @@ training_args = TrainingArguments(
     save_total_limit=2,  # Adjust as needed
     logging_dir="./logs",
     logging_steps=10,  # Adjust as needed
-    cuda_device=cuda_device,
+
 
 )
 
