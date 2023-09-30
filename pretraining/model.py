@@ -143,7 +143,7 @@ data_collator = DataCollatorForLanguageModeling(
 )
 dataloader = DataLoader(dataset, batch_size=4, collate_fn=data_collator)
 
-cuda_device = int(arguments.cuda_device)
+device = int(arguments.cuda_device)
 
 # Define training arguments
 training_args = TrainingArguments(
@@ -155,8 +155,12 @@ training_args = TrainingArguments(
     save_total_limit=2,  # Adjust as needed
     logging_dir="./logs",
     logging_steps=10,  # Adjust as needed
+    cuda_device = device,
 )
 
+model.to(training_args.cuda_device)
+
+dataset = dataset.to(training_args.cuda_device)
 # Create a DataLoader for training
 train_dataloader = DataLoader(dataset, batch_size=training_args.per_device_train_batch_size, collate_fn=data_collator)
 
@@ -164,7 +168,6 @@ train_dataloader = DataLoader(dataset, batch_size=training_args.per_device_train
 trainer = Trainer(
     model=model,
     args=training_args,
-    cuda_device=cuda_device,
     data_collator=data_collator,
     train_dataset=train_dataloader  # Use the DataLoader for training
 )
