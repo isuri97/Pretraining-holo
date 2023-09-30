@@ -150,45 +150,41 @@ dataloader = DataLoader(dataset, batch_size=4, collate_fn=data_collator)
 
 # device = int(arguments.cuda_device)
 
-# Define training arguments
-training_args = TrainingArguments(
-    output_dir="./mlm_model",
-    overwrite_output_dir=True,
-    num_train_epochs=3,  # Adjust as needed
-    per_device_train_batch_size=4,  # Adjust as needed
-    save_steps=10,  # Adjust as needed
-    save_total_limit=2,  # Adjust as needed
-    logging_dir="./logs",
-    logging_steps=10,  # Adjust as needed
+# # Define training arguments
+# training_args = TrainingArguments(
+#     output_dir="./mlm_model",
+#     overwrite_output_dir=True,
+#     num_train_epochs=3,  # Adjust as needed
+#     per_device_train_batch_size=4,  # Adjust as needed
+#     save_steps=10,  # Adjust as needed
+#     save_total_limit=2,  # Adjust as needed
+#     logging_dir="./logs",
+#     logging_steps=10,  # Adjust as needed
+#
+#
+# )
+#
+# # model.to(training_args.cuda_device)
+# # dataset = dataset.to(training_args.cuda_device)
+#
+# # Create a DataLoader for training
+# train_dataloader = DataLoader(dataset, batch_size=training_args.per_device_train_batch_size, collate_fn=data_collator)
+#
+# # Initialize a Trainer and start training
+# trainer = Trainer(
+#     model=model,
+#     args=training_args,
+#     data_collator=data_collator,
+#     train_dataset=dataset  # Use the DataLoader for training
+# )
+#
+# trainer.train()
+#
+# # Use the trained model to predict masked words
+# fill_mask = pipeline(task='fill-mask', model=model, tokenizer=tokenizer)
+# results = fill_mask("The [MASK] brown fox jumps over the lazy dog.")
+#
+# for result in results:
+#     print(f"Predicted word: {result['token_str']} (Score: {result['score']:.4f})")
 
 
-)
-
-# model.to(training_args.cuda_device)
-
-# dataset = dataset.to(training_args.cuda_device)
-# Create a DataLoader for training
-train_dataloader = DataLoader(dataset, batch_size=training_args.per_device_train_batch_size, collate_fn=data_collator)
-
-# Initialize a Trainer and start training
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    data_collator=data_collator,
-    train_dataset=dataset  # Use the DataLoader for training
-)
-
-trainer.train()
-
-# Use the trained model to predict masked words
-fill_mask = pipeline(task='fill-mask', model=model, tokenizer=tokenizer)
-results = fill_mask("The [MASK] brown fox jumps over the lazy dog.")
-
-for result in results:
-    print(f"Predicted word: {result['token_str']} (Score: {result['score']:.4f})")
-
-
-# tokenized_train_data = []
-# for example in train_set['text']:
-#     tokens = tokenizer(example, padding=True, truncation=True)
-#     tokenized_train_data.append(tokens)
