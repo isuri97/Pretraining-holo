@@ -93,8 +93,12 @@ def split_text_into_chunks(text, max_chunk_length):
     else:
         return []
 
+cuda_device = 3
+
+torch.cuda.set_device(cuda_device)
+
 # Initialize a tokenizer and model (you can replace 'bert-base-uncased' with any other model)
-model = AutoModelForMaskedLM.from_pretrained('bert-base-uncased')
+model = AutoModelForMaskedLM.from_pretrained('bert-base-uncased').to(cuda_device)
 
 
 # Tokenize and process each text chunk in the DataFrame
@@ -155,12 +159,12 @@ training_args = TrainingArguments(
     save_total_limit=2,  # Adjust as needed
     logging_dir="./logs",
     logging_steps=10,  # Adjust as needed
-    cuda_device = 3,
+
 )
 
-model.to(training_args.cuda_device)
+# model.to(training_args.cuda_device)
 
-dataset = dataset.to(training_args.cuda_device)
+# dataset = dataset.to(training_args.cuda_device)
 # Create a DataLoader for training
 train_dataloader = DataLoader(dataset, batch_size=training_args.per_device_train_batch_size, collate_fn=data_collator)
 
