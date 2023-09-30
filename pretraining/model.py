@@ -4,10 +4,11 @@ from transformers import AutoModelForMaskedLM
 from transformers import Trainer, TrainingArguments, pipeline
 import torch
 from torch.utils.data import DataLoader, Dataset
+
 import math
 import pandas as pd
 import argparse
-
+torch.cuda.is_available()
 # cuda_device = 3
 #
 # torch.cuda.set_device(cuda_device)
