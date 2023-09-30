@@ -159,6 +159,7 @@ training_args = TrainingArguments(
     save_total_limit=2,  # Adjust as needed
     logging_dir="./logs",
     logging_steps=10,  # Adjust as needed
+    cuda_device=cuda_device,
 
 )
 
@@ -173,7 +174,7 @@ trainer = Trainer(
     model=model,
     args=training_args,
     data_collator=data_collator,
-    train_dataset=train_dataloader  # Use the DataLoader for training
+    train_dataset=dataset  # Use the DataLoader for training
 )
 
 trainer.train()
