@@ -8,9 +8,9 @@ import math
 import pandas as pd
 import argparse
 
-cuda_device = 3
-
-torch.cuda.set_device(cuda_device)
+# cuda_device = 3
+#
+# torch.cuda.set_device(cuda_device)
 
 # parser = argparse.ArgumentParser(
 #     description='''evaluates multiple models  ''')
@@ -150,19 +150,19 @@ dataloader = DataLoader(dataset, batch_size=4, collate_fn=data_collator)
 
 # device = int(arguments.cuda_device)
 
-# # Define training arguments
-# training_args = TrainingArguments(
-#     output_dir="./mlm_model",
-#     overwrite_output_dir=True,
-#     num_train_epochs=3,  # Adjust as needed
-#     per_device_train_batch_size=4,  # Adjust as needed
-#     save_steps=10,  # Adjust as needed
-#     save_total_limit=2,  # Adjust as needed
-#     logging_dir="./logs",
-#     logging_steps=10,  # Adjust as needed
-#
-#
-# )
+# Define training arguments
+training_args = TrainingArguments(
+    output_dir="./mlm_model",
+    overwrite_output_dir=True,
+    num_train_epochs=3,  # Adjust as needed
+    per_device_train_batch_size=4,  # Adjust as needed
+    save_steps=10,  # Adjust as needed
+    save_total_limit=2,  # Adjust as needed
+    logging_dir="./logs",
+    logging_steps=10,  # Adjust as needed
+
+
+)
 #
 # # model.to(training_args.cuda_device)
 # # dataset = dataset.to(training_args.cuda_device)
