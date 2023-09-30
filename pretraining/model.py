@@ -171,14 +171,14 @@ training_args = TrainingArguments(
 # train_dataloader = DataLoader(dataset, batch_size=training_args.per_device_train_batch_size, collate_fn=data_collator)
 #
 # # Initialize a Trainer and start training
-# trainer = Trainer(
-#     model=model,
-#     args=training_args,
-#     data_collator=data_collator,
-#     train_dataset=dataset  # Use the DataLoader for training
-# )
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    data_collator=data_collator,
+    train_dataset=dataset  # Use the DataLoader for training
+)
 #
-# trainer.train()
+trainer.train()
 #
 # # Use the trained model to predict masked words
 # fill_mask = pipeline(task='fill-mask', model=model, tokenizer=tokenizer)
