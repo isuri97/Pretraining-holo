@@ -8,6 +8,9 @@ import math
 import pandas as pd
 import argparse
 
+cuda_device = 3
+
+torch.cuda.set_device(cuda_device)
 
 # parser = argparse.ArgumentParser(
 #     description='''evaluates multiple models  ''')
@@ -93,9 +96,7 @@ def split_text_into_chunks(text, max_chunk_length):
     else:
         return []
 
-cuda_device = 3
 
-torch.cuda.set_device(cuda_device)
 #
 # # Initialize a tokenizer and model (you can replace 'bert-base-uncased' with any other model)
 model = AutoModelForMaskedLM.from_pretrained('bert-base-uncased').to(cuda_device)
