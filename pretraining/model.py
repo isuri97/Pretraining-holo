@@ -9,10 +9,10 @@ import pandas as pd
 import argparse
 
 
-parser = argparse.ArgumentParser(
-    description='''evaluates multiple models  ''')
-parser.add_argument('--cuda_device', required=False, help='cuda device', default=0)
-arguments = parser.parse_args()
+# parser = argparse.ArgumentParser(
+#     description='''evaluates multiple models  ''')
+# parser.add_argument('--cuda_device', required=False, help='cuda device', default=0)
+# arguments = parser.parse_args()
 
 df1 = pd.read_csv('data/clean-ushmm.csv')
 df2 = pd.read_csv('data/wiener_novermberdown_2.csv')
@@ -143,7 +143,7 @@ data_collator = DataCollatorForLanguageModeling(
 )
 dataloader = DataLoader(dataset, batch_size=4, collate_fn=data_collator)
 
-device = int(arguments.cuda_device)
+# device = int(arguments.cuda_device)
 
 # Define training arguments
 training_args = TrainingArguments(
@@ -155,7 +155,7 @@ training_args = TrainingArguments(
     save_total_limit=2,  # Adjust as needed
     logging_dir="./logs",
     logging_steps=10,  # Adjust as needed
-    cuda_device = device,
+    cuda_device = 3,
 )
 
 model.to(training_args.cuda_device)
