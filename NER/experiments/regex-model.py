@@ -587,7 +587,7 @@ nlp.add_pipe("find_military", before="ner")
 import pandas as pd
 
 df = pd.read_csv('../test_set.csv')
-source_list = df['edited-text']
+source_list = df['text']
 
 col0 = []
 col1 = []
