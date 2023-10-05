@@ -30,6 +30,14 @@ df_train =  df_train[df_train['document_id'] < 10]
 # document_ids = filtered_df['Document_ID'].tolist()
 df_test = df_test[df_test['document_id'] < 205]
 
+df_train = df_train.dropna(subset=['sentence_id'])
+df_train = df_train.dropna(subset=['words'])
+df_train = df_train.dropna(subset=['labels'])
+
+df_test = df_test.dropna(subset=['sentence_id'])
+df_test = df_test.dropna(subset=['words'])
+df_test = df_test.dropna(subset=['labels'])
+
 # print(len(sample_train))
 # print(len(sample_test))
 
