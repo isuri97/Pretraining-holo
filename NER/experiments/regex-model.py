@@ -614,7 +614,7 @@ for index, n in enumerate(source_list):
         new = pd.DataFrame(list(zip(col0, col1, col2)))
         # fil = 'sample' + str(l) + '.txt'
         # new.to_csv('/content/drive/MyDrive/phd_colab/NLP_pipeline_Holocaust/data/fil', index=False)
-        new.to_csv('test-set-annotated.csv', index=False)
+        new.to_csv('train-set-annotated.csv', index=False)
 
 #
 # col0=[]
