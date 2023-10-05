@@ -24,7 +24,8 @@ us_data = pd.read_csv('../../data/ushmm.csv', sep='\t', quoting=csv.QUOTE_ALL, e
 wiener_data = pd.read_csv('../../data/wiener.csv', sep='\t', quoting=csv.QUOTE_ALL, encoding='utf-8')
 
 df_train, df_test = [x for _, x in wiener_data.groupby(wiener_data['document_id'] >= 200)]
-df_train = pd.concat([df_train, us_data], axis=0, ignore_index=True)
+df_train = pd.concat([df_train, us_data], ignore_index=True)
+
 
 print(f'training set size {len(df_train)}')
 print(f'test set size {len(df_test)}')
