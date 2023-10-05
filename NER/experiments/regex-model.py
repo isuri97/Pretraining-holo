@@ -586,7 +586,7 @@ nlp.add_pipe("find_military", before="ner")
 
 import pandas as pd
 
-df = pd.read_csv('../test_set.csv')
+df = pd.read_csv('../train-set.csv')
 source_list = df['text']
 
 col0 = []
