@@ -86,5 +86,9 @@ labels = ['B-SHIP', 'I-SHIP','B-GHETTO', 'I-GHETTO', 'B-STREET', 'I-STREET', 'B-
 print(truths)
 print(preds)
 
-print(metrics.classification_report(truths,preds,digits=4))
+
+classification_report_str = metrics.classification_report(truths,preds,digits=4)
+
+with open('output.txt', 'w') as output_file:
+    output_file.write(classification_report_str)
 
