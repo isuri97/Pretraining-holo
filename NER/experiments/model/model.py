@@ -26,9 +26,9 @@ wiener_data = pd.read_csv('../../data/wiener.csv', sep='\t', quoting=csv.QUOTE_A
 df_train, df_test = [x for _, x in wiener_data.groupby(wiener_data['document_id'] >= 200)]
 df_train = pd.concat([df_train, us_data], ignore_index=True)
 
-# df_train =  df_train[df_train['document_id'] < 10]
-# # document_ids = filtered_df['Document_ID'].tolist()
-# df_test = df_test[df_test['document_id'] < 205]
+df_train =  df_train[df_train['document_id'] < 10]
+# document_ids = filtered_df['Document_ID'].tolist()
+df_test = df_test[df_test['document_id'] < 205]
 
 df_train = df_train.dropna(subset=['sentence_id'])
 df_train = df_train.dropna(subset=['words'])
@@ -81,8 +81,8 @@ model = NERModel(
 
 model.train_model(df_train)
 model.save_model()
-
 print(len(df_test))
+
 results, outputs, preds_list, truths, preds = model.eval_model(df_test)
 print(results)
 preds_list = [tag for s in preds_list for tag in s]
