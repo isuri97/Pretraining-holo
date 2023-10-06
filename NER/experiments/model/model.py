@@ -41,8 +41,25 @@ df_test = df_test.dropna(subset=['labels'])
 print(df_train.shape)
 print(df_test.shape)
 
-print(f'training set size {len(df_train)}')
-print(f'test set size {len(df_test)}')
+# reduce 'o' label from the test set
+grouped_df = df_test.groupby('sentence_id').agg({'words': ' '.join, 'labels': ' '.join}).reset_index()
+df_with_tags = grouped_df[grouped_df['labels'].str.contains('B')]
+df_without_tags = grouped_df[~grouped_df['labels'].str.contains('B')]
+# combine 10% of all 'o' labels
+sampled_rows = df_without_tags.sample(frac=0.1, random_state=42)
+df_combined_test = pd.concat([df_with_tags, sampled_rows], ignore_index=True)
+
+print(len(df_without_tags))
+print(len(df_with_tags))
+
+print(len(df_combined_test))
+
+
+
+
+
+# print(f'training set size {len(df_train)}')
+# print(f'test set size {len(df_test)}')
 #
 print(df_train)
 #
@@ -50,7 +67,7 @@ model_args = NERArgs()
 model_args.train_batch_size = 64
 model_args.eval_batch_size = 64
 model_args.overwrite_output_dir = True
-model_args.num_train_epochs = 1
+model_args.num_train_epochs = 3
 model_args.use_multiprocessing = False
 model_args.use_multiprocessing_for_evaluation = False
 model_args.classification_report = True
@@ -81,9 +98,9 @@ model = NERModel(
 
 model.train_model(df_train)
 model.save_model()
-print(len(df_test))
+print(len(df_combined_test))
 
-results, outputs, preds_list, truths, preds = model.eval_model(df_test)
+results, outputs, preds_list, truths, preds = model.eval_model(df_combined_test)
 print(results)
 preds_list = [tag for s in preds_list for tag in s]
 ll = []
@@ -91,8 +108,8 @@ key_list = []
 
 print(truths)
 print(preds)
-df_test['original_test_set'] = truths
-df_test['predicted_set'] = preds
+df_combined_test['original_test_set'] = truths
+df_combined_test['predicted_set'] = preds
 
 # take the label and count is it match with
 labels = ['B-SHIP', 'I-SHIP','B-GHETTO', 'I-GHETTO', 'B-STREET', 'I-STREET', 'B-MILITARY', 'I-MILITARY', 'B-DATE', 'I-DATE', 'B-PERSON', 'I-PERSON',
