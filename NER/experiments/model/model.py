@@ -108,7 +108,7 @@ key_list = []
 
 print(truths)
 print(preds)
-df_combined_test['original_test_set'] = truths
+df_combined_test['labels'] = truths
 df_combined_test['predicted_set'] = preds
 
 # take the label and count is it match with
