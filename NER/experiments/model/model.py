@@ -47,12 +47,12 @@ df_with_tags = grouped_df[grouped_df['labels'].str.contains('B')]
 df_without_tags = grouped_df[~grouped_df['labels'].str.contains('B')]
 # combine 10% of all 'o' labels
 sampled_rows = df_without_tags.sample(frac=0.1, random_state=42)
-df_combined_test = pd.concat([df_with_tags, sampled_rows], ignore_index=True)
+df_test = pd.concat([df_with_tags, sampled_rows], ignore_index=True)
 
 print(len(df_without_tags))
 print(len(df_with_tags))
 
-print(len(df_combined_test))
+print(len(df_test))
 
 
 
@@ -98,9 +98,9 @@ model = NERModel(
 
 model.train_model(df_train)
 model.save_model()
-print(len(df_combined_test))
+print(len(df_test))
 
-results, outputs, preds_list, truths, preds = model.eval_model(df_combined_test['word'])
+results, outputs, preds_list, truths, preds = model.eval_model(df_test)
 print(results)
 preds_list = [tag for s in preds_list for tag in s]
 ll = []
@@ -108,8 +108,8 @@ key_list = []
 
 print(truths)
 print(preds)
-df_combined_test['labels'] = truths
-df_combined_test['predicted_set'] = preds
+df_test['labels'] = truths
+df_test['predicted_set'] = preds
 
 # take the label and count is it match with
 labels = ['B-SHIP', 'I-SHIP','B-GHETTO', 'I-GHETTO', 'B-STREET', 'I-STREET', 'B-MILITARY', 'I-MILITARY', 'B-DATE', 'I-DATE', 'B-PERSON', 'I-PERSON',
