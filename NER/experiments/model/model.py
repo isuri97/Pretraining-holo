@@ -26,9 +26,9 @@ wiener_data = pd.read_csv('../../data/wiener.csv', sep='\t', quoting=csv.QUOTE_A
 df_train, df_test = [x for _, x in wiener_data.groupby(wiener_data['document_id'] >= 200)]
 df_train = pd.concat([df_train, us_data], ignore_index=True)
 
-df_train =  df_train[df_train['document_id'] < 10]
-# document_ids = filtered_df['Document_ID'].tolist()
-df_test = df_test[df_test['document_id'] < 205]
+# df_train =  df_train[df_train['document_id'] < 2]
+# # document_ids = filtered_df['Document_ID'].tolist()
+# df_test = df_test[df_test['document_id'] < 201]
 
 df_train = df_train.dropna(subset=['sentence_id'])
 df_train = df_train.dropna(subset=['words'])
@@ -38,8 +38,8 @@ df_test = df_test.dropna(subset=['sentence_id'])
 df_test = df_test.dropna(subset=['words'])
 df_test = df_test.dropna(subset=['labels'])
 
-# print(len(sample_train))
-# print(len(sample_test))
+print(df_train.shape)
+print(df_test.shape)
 
 print(f'training set size {len(df_train)}')
 print(f'test set size {len(df_test)}')
