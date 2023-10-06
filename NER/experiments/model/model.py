@@ -100,7 +100,7 @@ model.train_model(df_train)
 model.save_model()
 print(len(df_combined_test))
 
-results, outputs, preds_list, truths, preds = model.eval_model(df_combined_test)
+results, outputs, preds_list, truths, preds = model.eval_model(df_combined_test['word'])
 print(results)
 preds_list = [tag for s in preds_list for tag in s]
 ll = []
