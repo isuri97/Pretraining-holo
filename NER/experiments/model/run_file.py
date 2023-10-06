@@ -54,7 +54,7 @@ model = NERModel(
 )
 
 model.train_model(train_df,eval_df= val_df)
-model.save_model()
+# model.save_model()
 print(len(test_df))
 
 results, outputs, preds_list, truths, preds = model.eval_model(test_df)
