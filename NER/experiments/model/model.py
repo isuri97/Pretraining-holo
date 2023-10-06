@@ -1,7 +1,7 @@
 import pandas as pd
 import torch.cuda
 from sklearn import metrics
-# from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split
 import argparse
 import csv
 # from collections import Counter
@@ -58,13 +58,16 @@ df_test = df_test.explode(['words', 'labels'], ignore_index=True)
 
 print(df_test)
 
-#
-#
+train_df, val_df = train_test_split(df_train, test_size=0.3)
+
+train_df.to_csv('train_df.csv', sep='\t', index=False)
+val_df.to_csv('val_df.csv', sep ='\t', index=False)
+df_test.to_csv('test_df.csv', sep='\t', index=False)
 
 print(f'training set size {len(df_train)}')
 print(f'test set size {len(df_test)}')
 
-print(df_train)
+print(train_df)
 #
 model_args = NERArgs()
 model_args.train_batch_size = 64
@@ -74,6 +77,7 @@ model_args.num_train_epochs = 3
 model_args.use_multiprocessing = False
 model_args.use_multiprocessing_for_evaluation = False
 model_args.classification_report = True
+model_args.evaluate_during_training=True
 model_args.wandb_project="holo-ner"
 model_args.labels_list = ['O', 'B-DATE', 'B-PERSON', 'B-GPE', 'B-ORG', 'I-ORG', 'B-CARDINAL', 'B-LANGUAGE',
                           'B-EVENT', 'I-DATE', 'B-NORP', 'B-TIME', 'I-TIME', 'I-GPE', 'B-ORDINAL', 'I-PERSON',
@@ -99,7 +103,7 @@ model = NERModel(
     args=model_args,
 )
 
-model.train_model(df_train)
+model.train_model(train_df,eval_df= val_df)
 model.save_model()
 print(len(df_test))
 
