@@ -52,15 +52,18 @@ df_test = pd.concat([df_with_tags, sampled_rows], ignore_index=True)
 print(len(df_without_tags))
 print(len(df_with_tags))
 
-print(len(df_test))
+df_test['words'] = df_test['words'].str.split()
+df_test['labels'] = df_test['labels'].str.split()
+df_test = df_test.explode(['words', 'labels'], ignore_index=True)
 
+print(df_test)
 
-
-
-
-# print(f'training set size {len(df_train)}')
-# print(f'test set size {len(df_test)}')
 #
+#
+
+print(f'training set size {len(df_train)}')
+print(f'test set size {len(df_test)}')
+
 print(df_train)
 #
 model_args = NERArgs()
