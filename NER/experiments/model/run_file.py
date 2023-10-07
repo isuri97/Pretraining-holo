@@ -66,8 +66,8 @@ key_list = []
 
 print(truths)
 print(preds)
-test_df['labels'] = truths
-test_df['predicted_set'] = preds
+# test_df['labels'] = truths
+# test_df['predicted_set'] = preds
 
 # take the label and count is it match with
 labels = ['B-SHIP', 'I-SHIP','B-GHETTO', 'I-GHETTO', 'B-STREET', 'I-STREET', 'B-MILITARY', 'I-MILITARY', 'B-DATE', 'I-DATE', 'B-PERSON', 'I-PERSON',
