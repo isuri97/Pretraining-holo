@@ -20,11 +20,12 @@ train_df = pd.read_csv('train_df.csv', sep='\t', usecols=['words','labels','sent
 val_df = pd.read_csv('val_df.csv', sep='\t', usecols=['words','labels','sentence_id'])
 
 model_args = NERArgs()
-model_args.train_batch_size = 8
+model_args.train_batch_size = 64
 model_args.eval_batch_size = 64
 model_args.overwrite_output_dir = True
 model_args.num_train_epochs = 3
 model_args.use_multiprocessing = False
+model_args.save_best_model=False
 model_args.use_multiprocessing_for_evaluation = False
 model_args.classification_report = True
 model_args.evaluate_during_training = False
