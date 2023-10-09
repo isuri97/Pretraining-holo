@@ -83,7 +83,7 @@ print(preds)
 
 # take the label and count is it match with
 labels = ['B-SHIP', 'I-SHIP','B-GHETTO', 'I-GHETTO', 'B-STREET', 'I-STREET', 'B-MILITARY', 'I-MILITARY', 'B-DATE', 'I-DATE', 'B-PERSON', 'I-PERSON',
-          'B-GPE', 'I-GPE', 'B-TIME', 'I-TIME', 'B-EVENT', 'I-EVENT', 'B-ORG', 'I-ORG', 'B-TIME', 'I-TIME','I-BUILDING', 'B-BUILDING', 'B-WORK', 'I-WORK']
+          'B-GPE', 'I-GPE', 'B-TIME', 'I-TIME', 'B-EVENT', 'I-EVENT', 'B-ORG', 'I-ORG', 'B-TIME', 'I-TIME','I-BUILDING', 'B-BUILDING', 'B-WORK', 'I-WORK', 'B-SCOPE', 'I-SCOPE']
 
 print(truths)
 print(preds)
