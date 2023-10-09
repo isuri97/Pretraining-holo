@@ -54,7 +54,7 @@ model_args.labels_list = ['O', 'B-DATE', 'B-PERSON', 'B-GPE', 'B-ORG', 'I-ORG', 
                           'B-PRODUCT', 'I-CAMP', 'I-LOC', 'I-PRODUCT', 'I-GHETTO', 'B-SPOUSAL', 'I-SPOUSAL', 'B-SHIP',
                           'I-SHIP',
                           'B-FOREST', 'I-FOREST', 'B-GROUP', 'I-GROUP', 'B-MOUNTAIN', 'I-MOUNTAIN', 'I-BUILDING', 'B-BUILDING', 'B-WORK', 'I-WORK', 'B-SCOPE', 'I-SCOPE',
-                          'B-loc', 'I-loc']
+                          'B-loc', 'I-loc', 'B-date', 'I-date']
 
 MODEL_NAME = arguments.model_name
 MODEL_TYPE = arguments.model_type
@@ -85,7 +85,7 @@ print(preds)
 # take the label and count is it match with
 labels = ['B-SHIP', 'I-SHIP','B-GHETTO', 'I-GHETTO', 'B-STREET', 'I-STREET', 'B-MILITARY', 'I-MILITARY', 'B-DATE', 'I-DATE', 'B-PERSON', 'I-PERSON',
           'B-GPE', 'I-GPE', 'B-TIME', 'I-TIME', 'B-EVENT', 'I-EVENT', 'B-ORG', 'I-ORG', 'B-TIME', 'I-TIME','I-BUILDING', 'B-BUILDING', 'B-WORK', 'I-WORK', 'B-SCOPE', 'I-SCOPE',
-          'B-loc', 'I-loc']
+          'B-loc', 'I-loc', 'B-date', 'I-date']
 
 print(truths)
 print(preds)
