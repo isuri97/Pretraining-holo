@@ -22,13 +22,14 @@ arguments = parser.parse_args()
 
 us_data = pd.read_csv('../../data/ushmm.csv', sep='\t', quoting=csv.QUOTE_ALL, encoding='utf-8')
 wiener_data = pd.read_csv('../../data/wiener.csv', sep='\t', quoting=csv.QUOTE_ALL, encoding='utf-8')
+yale_data = pd.read_csv('../../data/yale-testing.csv', sep='\t', quoting=csv.QUOTE_ALL, encoding='utf-8')
 
 df_train, df_test = [x for _, x in wiener_data.groupby(wiener_data['document_id'] >= 200)]
-df_train = pd.concat([df_train, us_data], ignore_index=True)
+df_train = pd.concat([df_train, us_data, yale_data], ignore_index=True)
 
-df_train =  df_train[df_train['document_id'] < 2]
-# document_ids = filtered_df['Document_ID'].tolist()
-df_test = df_test[df_test['document_id'] < 201]
+# df_train =  df_train[df_train['document_id'] < 2]
+# # document_ids = filtered_df['Document_ID'].tolist()
+# df_test = df_test[df_test['document_id'] < 201]
 
 df_train = df_train.dropna(subset=['sentence_id'])
 df_train = df_train.dropna(subset=['words'])
