@@ -53,7 +53,7 @@ model_args.labels_list = ['O', 'B-DATE', 'B-PERSON', 'B-GPE', 'B-ORG', 'I-ORG', 
                           'I-SEA-OCEAN',
                           'B-PRODUCT', 'I-CAMP', 'I-LOC', 'I-PRODUCT', 'I-GHETTO', 'B-SPOUSAL', 'I-SPOUSAL', 'B-SHIP',
                           'I-SHIP',
-                          'B-FOREST', 'I-FOREST', 'B-GROUP', 'I-GROUP', 'B-MOUNTAIN', 'I-MOUNTAIN', 'I-BUILDING', 'B-BUILDING', 'B-WORK', 'I-WORK']
+                          'B-FOREST', 'I-FOREST', 'B-GROUP', 'I-GROUP', 'B-MOUNTAIN', 'I-MOUNTAIN', 'I-BUILDING', 'B-BUILDING', 'B-WORK', 'I-WORK', 'B-SCOPE', 'I-SCOPE']
 
 MODEL_NAME = arguments.model_name
 MODEL_TYPE = arguments.model_type
