@@ -19,6 +19,18 @@ test_df = pd.read_csv('new/test_df_hipe.csv', sep='\t', usecols=['words','labels
 train_df = pd.read_csv('new/train_df_hipe', sep='\t', usecols=['words','labels','sentence_id'])
 val_df = pd.read_csv('new/val_df_hipe.csv', sep='\t', usecols=['words','labels','sentence_id'])
 
+train_df = train_df.dropna(subset=['sentence_id'])
+train_df = train_df.dropna(subset=['words'])
+train_df = train_df.dropna(subset=['labels'])
+
+test_df = test_df.dropna(subset=['sentence_id'])
+test_df = test_df.dropna(subset=['words'])
+test_df = test_df.dropna(subset=['labels'])
+
+val_df = val_df.dropna(subset=['sentence_id'])
+val_df = val_df.dropna(subset=['words'])
+val_df = val_df.dropna(subset=['labels'])
+
 model_args = NERArgs()
 model_args.train_batch_size = 64
 model_args.eval_batch_size = 64
