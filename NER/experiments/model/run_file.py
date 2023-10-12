@@ -19,6 +19,10 @@ test_df = pd.read_csv('test_df.csv', sep='\t', usecols=['words','labels','senten
 train_df = pd.read_csv('train_df.csv', sep='\t', usecols=['words','labels','sentence_id'])
 val_df = pd.read_csv('val_df.csv', sep='\t', usecols=['words','labels','sentence_id'])
 
+# test_df = pd.read_csv('t1.csv', sep='\t', usecols=['words','labels','sentence_id'])
+# train_df = pd.read_csv('tr.csv', sep='\t', usecols=['words','labels','sentence_id'])
+# val_df = pd.read_csv('val.csv', sep='\t', usecols=['words','labels','sentence_id'])
+
 model_args = NERArgs()
 model_args.train_batch_size = 64
 model_args.eval_batch_size = 64
@@ -45,12 +49,12 @@ model_args.labels_list = ['O', 'B-DATE', 'B-PERSON', 'B-GPE', 'B-ORG', 'I-ORG', 
 
 MODEL_NAME = arguments.model_name
 MODEL_TYPE = arguments.model_type
-cuda_device = int(arguments.cuda_device)
+# cuda_device = int(arguments.cuda_device)
 # MODEL_TYPE, MODEL_NAME,
 model = NERModel(
     MODEL_TYPE, MODEL_NAME,
     use_cuda=torch.cuda.is_available(),
-    cuda_device=cuda_device,
+    # cuda_device=cuda_device,
     args=model_args,
 )
 
@@ -58,11 +62,34 @@ model.train_model(train_df,eval_df= val_df)
 # model.save_model()
 print(len(test_df))
 
-results, outputs, preds_list, truths, preds = model.eval_model(test_df)
+
+# print the predictions
+# grouped_df = test_df.groupby('sentence_id').agg({'words': ' '.join, 'labels': ' '.join}).reset_index()
+# test_sentences = grouped_df.words
+# predictions, raw_outputs = model.predict(test_sentences)
+# data = {'Word': [], 'Label': []}
+#
+# for entry in predictions:
+#     for item in entry:
+#         for word, label in item.items():
+#             data['Word'].append(word)
+#             data['Label'].append(label)
+#
+# df = pd.DataFrame(data)
+# df.to_csv('prediction_result.csv', index=False)
+
+
+results, outputs, preds_list, truths, preds, words = model.eval_model(test_df)
 print(results)
+word_list = [word for sentence in words for word in sentence.split()]
 preds_list = [tag for s in preds_list for tag in s]
+df = pd.DataFrame({'Words': word_list, 'Predictions': preds_list})
+df.to_csv('word_pred_pairs.csv', index=False, sep='\t')
+
+
 ll = []
 key_list = []
+
 
 print(truths)
 print(preds)
@@ -73,8 +100,8 @@ print(preds)
 labels = ['B-SHIP', 'I-SHIP','B-GHETTO', 'I-GHETTO', 'B-STREET', 'I-STREET', 'B-MILITARY', 'I-MILITARY', 'B-DATE', 'I-DATE', 'B-PERSON', 'I-PERSON',
           'B-GPE', 'I-GPE', 'B-TIME', 'I-TIME', 'B-EVENT', 'I-EVENT', 'B-ORG', 'I-ORG', 'B-TIME', 'I-TIME']
 
-print(truths)
-print(preds)
+# print(truths)
+# print(preds)
 
 
 classification_report_str = metrics.classification_report(truths,preds,digits=4)
