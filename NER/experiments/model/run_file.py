@@ -49,12 +49,12 @@ model_args.labels_list = ['O', 'B-DATE', 'B-PERSON', 'B-GPE', 'B-ORG', 'I-ORG', 
 
 MODEL_NAME = arguments.model_name
 MODEL_TYPE = arguments.model_type
-# cuda_device = int(arguments.cuda_device)
+cuda_device = int(arguments.cuda_device)
 # MODEL_TYPE, MODEL_NAME,
 model = NERModel(
     MODEL_TYPE, MODEL_NAME,
     use_cuda=torch.cuda.is_available(),
-    # cuda_device=cuda_device,
+    cuda_device=cuda_device,
     args=model_args,
 )
 
