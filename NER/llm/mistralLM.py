@@ -25,8 +25,8 @@ model = AutoModelForCausalLM.from_pretrained(
         model_name,
         torch_dtype=torch.bfloat16,
         device_map="auto",
+        max_memory={0:'20GIB'},
         trust_remote_code=True,
-        offload_folder="offload"
     )
 
 pipe = pipeline(
