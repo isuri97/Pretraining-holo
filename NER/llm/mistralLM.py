@@ -82,6 +82,7 @@ model = AutoModelForCausalLM.from_pretrained(
         quantization_config=bnb_config,
         torch_dtype=torch.bfloat16,
         device_map="auto",
+        max_memory = {0: "20GIB", 1: "20GIB"},
         trust_remote_code=True,
     )
 
@@ -90,7 +91,7 @@ pipe = pipeline(
     model=model,
     tokenizer = tokenizer,
     torch_dtype=torch.bfloat16,
-        device_map="auto"
+    device_map="auto",
 )
 
 
