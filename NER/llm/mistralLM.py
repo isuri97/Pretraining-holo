@@ -106,10 +106,10 @@ for index, row in data.iterrows():
     # - Print the named entities only
     # holocaust text : ```{text}```"""
 
-    prompt = f"""Return a list of named entities in the given text.
+    prompt = f"""Return a list of named entities in the given text. 
           Text: ```{text}```
           Named entities:
-          Please do not generate other information.
+          
 """
     sequences = pipe(
         prompt,
