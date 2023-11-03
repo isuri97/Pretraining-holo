@@ -115,7 +115,7 @@ for index, row in data.iterrows():
             top_k=10,
             num_return_sequences=1,
             eos_token_id=tokenizer.eos_token_id,
-            max_token=200
+            max_length=200,
         )
 
         for j, seq in enumerate(sequences):
