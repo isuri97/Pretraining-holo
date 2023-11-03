@@ -106,11 +106,13 @@ for index, row in data.iterrows():
     # - Print the named entities only
     # holocaust text : ```{text}```"""
 
-    prompt = f"""Return a list of named entities in the given text. 
-          Text: ```{text}```
-          Named entities:
-          
-"""
+
+#     prompt = f"""Return a list of named entities in the given text.
+#           Text: ```{text}```
+#           Named entities:
+#
+# """
+    prompt = '<s>[INST] Which country has the most natural lakes? Answer with only the country name. [/INST]'
     sequences = pipe(
         prompt,
         do_sample=True,
@@ -129,3 +131,8 @@ for index, row in data.iterrows():
         # # Save the result to the output file
         # with open(output_filename, 'w') as output_file:
         #     output_file.write(result_text)
+
+# <s>[INST]You are a helpful historical NLP specialist. Your task is to generate list of named entities in given text:
+# text:
+# Just generate the list of Named entities without explanations:
+# [/INST]
