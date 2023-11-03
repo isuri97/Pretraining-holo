@@ -95,10 +95,12 @@ pipe = pipeline(
 )
 
 
-data = pd.read_csv('data1.csv', sep=",")
+
+data = pd.read_csv('text-sent.csv', sep=",")
 
 
 for index, row in data.iterrows():
+  doc_id = row['doc_id']
   text = row['tags']
   # prompt = f"""
   # Think you are a historian and you are supposed to find named entities and relationships in holocaust text.
@@ -106,10 +108,10 @@ for index, row in data.iterrows():
   # - Print the named entities only
   # holocaust text : ```{text}```"""
 
-  prompt = f"""Return a list of named entities in the text.
+  prompt = f"""Return a list of named entities in the given text.
           Text: ```{text}```
           Named entities:
-          Dont generate other useless information.
+          Please do not generate other information.
 """
   sequences = pipe(
       prompt,
@@ -117,8 +119,14 @@ for index, row in data.iterrows():
       top_k=10,
       num_return_sequences=1,
       eos_token_id=tokenizer.eos_token_id,
-      max_length=200,
+      max_length=500,
   )
 
-for seq in sequences:
-    print(f"Result: {seq['generated_text']}")
+  for i, seq in enumerate(sequences):
+      result_text = seq['generated_text']
+      # Define the output filename based on doc_id
+      output_filename = f'results_{doc_id}_{i}.txt'
+
+      # Save the result to the output file
+      with open(output_filename, 'w') as output_file:
+          output_file.write(result_text)
