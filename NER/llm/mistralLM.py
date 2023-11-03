@@ -63,9 +63,9 @@
 #     print(f"Result: {seq['generated_text']}")
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
-import transformers
 import torch
 import pandas as pd
+from nltk.tokenize import sent_tokenize
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -97,36 +97,32 @@ pipe = pipeline(
 data = pd.read_csv('text-sent.csv', sep="\t")
 
 for index, row in data.iterrows():
-
     doc_id = row['doc_id']
     text = row['sentences']
-    # prompt = f"""
-    # Think you are a historian and you are supposed to find named entities and relationships in holocaust text.
-    # - First identify the named entities with their named entity tags of the given text delimited by ```
-    # - Print the named entities only
-    # holocaust text : ```{text}```"""
 
+    # Tokenize the text into sentences
+    sentences = sent_tokenize(text)
 
-    prompt = f"""You are a helpful historical NLP specialist. Your task is to generate list of named entities in given text:
-          text: ```{text}```Just generate the list of Named entities without explanations:
-"""
+    for i, sentence in enumerate(sentences):
+        prompt = f"""You are a helpful historical NLP specialist. Your task is to generate a list of named entities in the given sentence:
+              Sentence: ```{sentence}```
+              Just generate the list of Named entities without explanations:
+        """
 
-    sequences = pipe(
-        prompt,
-        do_sample=True,
-        top_k=10,
-        num_return_sequences=1,
-        eos_token_id=tokenizer.eos_token_id,
+        sequences = pipe(
+            prompt,
+            do_sample=True,
+            top_k=10,
+            num_return_sequences=1,
+            eos_token_id=tokenizer.eos_token_id,
+            max_token=200
+        )
 
-    )
+        for j, seq in enumerate(sequences):
+            result_text = seq['generated_text']
+            # Define the output filename based on doc_id, sentence index, and result index
+            output_filename = f'results_{doc_id}_sent_{i}_result_{j}.txt'
 
-    for i, seq in enumerate(sequences):
-        print(sequences)
-        result_text = seq['generated_text']
-        # Define the output filename based on doc_id
-        output_filename = f'results_{doc_id}_{i}.txt'
-
-        # Save the result to the output file
-        with open(output_filename, 'w') as output_file:
-            output_file.write(result_text)
-
+            # Save the result to the output file
+            with open(output_filename, 'w') as output_file:
+                output_file.write(result_text)
