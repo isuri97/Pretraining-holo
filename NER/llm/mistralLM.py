@@ -77,56 +77,54 @@ model_name = 'mistralai/Mistral-7B-Instruct-v0.1'
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        load_in_4bit=True,
-        quantization_config=bnb_config,
-        torch_dtype=torch.bfloat16,
-        device_map="auto",
-        max_memory = {0: "20GIB", 1: "20GIB"},
-        trust_remote_code=True,
-    )
+    model_name,
+    load_in_4bit=True,
+    quantization_config=bnb_config,
+    torch_dtype=torch.bfloat16,
+    device_map="auto",
+    max_memory={0: "20GIB", 1: "20GIB"},
+    trust_remote_code=True,
+)
 
 pipe = pipeline(
     "text-generation",
     model=model,
-    tokenizer = tokenizer,
+    tokenizer=tokenizer,
     torch_dtype=torch.bfloat16,
     device_map="auto",
 )
 
-
-
-data = pd.read_csv('text-sent.csv', sep=",")
-
+data = pd.read_csv('text-sent.csv', sep="\t")
 
 for index, row in data.iterrows():
-  doc_id = row['doc_id']
-  text = row['tags']
-  # prompt = f"""
-  # Think you are a historian and you are supposed to find named entities and relationships in holocaust text.
-  # - First identify the named entities with their named entity tags of the given text delimited by ```
-  # - Print the named entities only
-  # holocaust text : ```{text}```"""
 
-  prompt = f"""Return a list of named entities in the given text.
+    doc_id = row['doc_id']
+    text = row['tags']
+    # prompt = f"""
+    # Think you are a historian and you are supposed to find named entities and relationships in holocaust text.
+    # - First identify the named entities with their named entity tags of the given text delimited by ```
+    # - Print the named entities only
+    # holocaust text : ```{text}```"""
+
+    prompt = f"""Return a list of named entities in the given text.
           Text: ```{text}```
           Named entities:
           Please do not generate other information.
 """
-  sequences = pipe(
-      prompt,
-      do_sample=True,
-      top_k=10,
-      num_return_sequences=1,
-      eos_token_id=tokenizer.eos_token_id,
-      max_length=500,
-  )
+    sequences = pipe(
+        prompt,
+        do_sample=True,
+        top_k=10,
+        num_return_sequences=1,
+        eos_token_id=tokenizer.eos_token_id,
+        max_length=500,
+    )
 
-  for i, seq in enumerate(sequences):
-      result_text = seq['generated_text']
-      # Define the output filename based on doc_id
-      output_filename = f'results_{doc_id}_{i}.txt'
+    for i, seq in enumerate(sequences):
+        result_text = seq['generated_text']
+        # Define the output filename based on doc_id
+        output_filename = f'results_{doc_id}_{i}.txt'
 
-      # Save the result to the output file
-      with open(output_filename, 'w') as output_file:
-          output_file.write(result_text)
+        # Save the result to the output file
+        with open(output_filename, 'w') as output_file:
+            output_file.write(result_text)
