@@ -24,7 +24,7 @@ train_df = pd.read_csv(arguments.train, sep='\t', usecols=['words','labels','sen
 test_df = pd.read_csv(arguments.test, sep='\t', usecols=['words','labels','sentence_id'])
 
 model_args = NERArgs()
-model_args.train_batch_size = 64
+model_args.train_batch_size = 1
 model_args.eval_batch_size = 64
 model_args.overwrite_output_dir = True
 model_args.num_train_epochs = 3
