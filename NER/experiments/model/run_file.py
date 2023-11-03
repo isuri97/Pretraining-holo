@@ -12,16 +12,16 @@ parser.add_argument('--model_name', required=False, help='model name', default="
 parser.add_argument('--model_type', required=False, help='model type', default="bert")
 parser.add_argument('--cuda_device', required=False, help='cuda device', default=3)
 parser.add_argument('--train', required=False, help='train file', default='data/sample.txt')
+parser.add_argument('--test', required=False, help='train file', default='data/sample.txt')
 
 arguments = parser.parse_args()
 
-test_df = pd.read_csv('test_df.csv', sep='\t', usecols=['words','labels','sentence_id'])
-train_df = pd.read_csv('train_df.csv', sep='\t', usecols=['words','labels','sentence_id'])
-val_df = pd.read_csv('val_df.csv', sep='\t', usecols=['words','labels','sentence_id'])
-
-# test_df = pd.read_csv('t1.csv', sep='\t', usecols=['words','labels','sentence_id'])
-# train_df = pd.read_csv('tr.csv', sep='\t', usecols=['words','labels','sentence_id'])
+# test_df = pd.read_csv('tr.csv', sep='\t', usecols=['words','labels','sentence_id'])
+# train_df = pd.read_csv('t1.csv', sep='\t', usecols=['words','labels','sentence_id'])
 # val_df = pd.read_csv('val.csv', sep='\t', usecols=['words','labels','sentence_id'])
+
+train_df = pd.read_csv(arguments.train, sep='\t', usecols=['words','labels','sentence_id'])
+test_df = pd.read_csv(arguments.test, sep='\t', usecols=['words','labels','sentence_id'])
 
 model_args = NERArgs()
 model_args.train_batch_size = 128
@@ -49,16 +49,17 @@ model_args.labels_list = ['O', 'B-DATE', 'B-PERSON', 'B-GPE', 'B-ORG', 'I-ORG', 
 
 MODEL_NAME = arguments.model_name
 MODEL_TYPE = arguments.model_type
-cuda_device = int(arguments.cuda_device)
+# cuda_device = int(arguments.cuda_device)
 # MODEL_TYPE, MODEL_NAME,
 model = NERModel(
     MODEL_TYPE, MODEL_NAME,
     use_cuda=torch.cuda.is_available(),
-    cuda_device=cuda_device,
+    # cuda_device=cuda_device,
     args=model_args,
 )
 
-model.train_model(train_df,eval_df= val_df)
+# model.train_model(train_df,eval_df= val_df)
+model.train_model(train_df)
 # model.save_model()
 print(len(test_df))
 
