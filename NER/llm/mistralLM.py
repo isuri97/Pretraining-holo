@@ -122,8 +122,9 @@ for index, row in data.iterrows():
         max_length=500,
     )
 
-    for i, seq in enumerate(sequences):
-        print(sequences)
+    print(f"Model output: {sequences}")
+    # for i, seq in enumerate(sequences):
+    #     print(sequences)
         # result_text = seq['generated_text']
         # # Define the output filename based on doc_id
         # output_filename = f'results_{doc_id}_{i}.txt'
