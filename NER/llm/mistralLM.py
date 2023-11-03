@@ -112,7 +112,13 @@ for index, row in data.iterrows():
 #           Named entities:
 #
 # """
-    prompt = 'Which country has the most natural lakes? Answer with only the country name.'
+#     prompt = 'Which country has the most natural lakes? Answer with only the country name.'
+
+    prompt = "Tell me about AI"
+    prompt_template = f'''USER: {prompt}
+    ASSISTANT:
+    '''
+
     sequences = pipe(
         prompt,
         do_sample=True,
@@ -122,7 +128,7 @@ for index, row in data.iterrows():
         max_length=500,
     )
 
-    print(f"Model output: {sequences}")
+    print(pipe(prompt_template)[0]['generated_text'])
     # for i, seq in enumerate(sequences):
     #     print(sequences)
         # result_text = seq['generated_text']
