@@ -107,17 +107,9 @@ for index, row in data.iterrows():
     # holocaust text : ```{text}```"""
 
 
-#     prompt = f"""Return a list of named entities in the given text.
-#           Text: ```{text}```
-#           Named entities:
-#
-# """
-#     prompt = 'Which country has the most natural lakes? Answer with only the country name.'
-
-    prompt = "Tell me about AI"
-    prompt_template = f'''USER: {prompt}
-    ASSISTANT:
-    '''
+    prompt = f"""You are a helpful historical NLP specialist. Your task is to generate list of named entities in given text:
+          text: ```{text}```Just generate the list of Named entities without explanations:
+"""
 
     sequences = pipe(
         prompt,
@@ -125,21 +117,16 @@ for index, row in data.iterrows():
         top_k=10,
         num_return_sequences=1,
         eos_token_id=tokenizer.eos_token_id,
-        max_length=500,
+
     )
 
-    print(pipe(prompt_template)[0]['generated_text'])
-    # for i, seq in enumerate(sequences):
-    #     print(sequences)
-        # result_text = seq['generated_text']
-        # # Define the output filename based on doc_id
-        # output_filename = f'results_{doc_id}_{i}.txt'
-        #
-        # # Save the result to the output file
-        # with open(output_filename, 'w') as output_file:
-        #     output_file.write(result_text)
+    for i, seq in enumerate(sequences):
+        print(sequences)
+        result_text = seq['generated_text']
+        # Define the output filename based on doc_id
+        output_filename = f'results_{doc_id}_{i}.txt'
 
-# <s>[INST]You are a helpful historical NLP specialist. Your task is to generate list of named entities in given text:
-# text:
-# Just generate the list of Named entities without explanations:
-# [/INST]
+        # Save the result to the output file
+        with open(output_filename, 'w') as output_file:
+            output_file.write(result_text)
+
