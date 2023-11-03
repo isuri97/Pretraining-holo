@@ -121,10 +121,11 @@ for index, row in data.iterrows():
     )
 
     for i, seq in enumerate(sequences):
-        result_text = seq['generated_text']
-        # Define the output filename based on doc_id
-        output_filename = f'results_{doc_id}_{i}.txt'
-
-        # Save the result to the output file
-        with open(output_filename, 'w') as output_file:
-            output_file.write(result_text)
+        print(sequences)
+        # result_text = seq['generated_text']
+        # # Define the output filename based on doc_id
+        # output_filename = f'results_{doc_id}_{i}.txt'
+        #
+        # # Save the result to the output file
+        # with open(output_filename, 'w') as output_file:
+        #     output_file.write(result_text)
