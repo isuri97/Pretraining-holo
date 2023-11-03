@@ -112,7 +112,7 @@ for index, row in data.iterrows():
 #           Named entities:
 #
 # """
-    prompt = '<s>[INST] Which country has the most natural lakes? Answer with only the country name. [/INST]'
+    prompt = 'Which country has the most natural lakes? Answer with only the country name.'
     sequences = pipe(
         prompt,
         do_sample=True,
