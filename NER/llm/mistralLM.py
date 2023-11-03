@@ -99,7 +99,7 @@ data = pd.read_csv('text-sent.csv', sep="\t")
 for index, row in data.iterrows():
 
     doc_id = row['doc_id']
-    text = row['tags']
+    text = row['sentences']
     # prompt = f"""
     # Think you are a historian and you are supposed to find named entities and relationships in holocaust text.
     # - First identify the named entities with their named entity tags of the given text delimited by ```
