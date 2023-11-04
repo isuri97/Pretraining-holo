@@ -68,8 +68,8 @@ model = NERModel(
     args=model_args,
 )
 
-model.train_model(train_df,eval_df= val_df)
-# model.train_model(train_df)
+# model.train_model(train_df,eval_df= val_df)
+model.train_model(train_df)
 # model.save_model()
 print(len(test_df))
 
