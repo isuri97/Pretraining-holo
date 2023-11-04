@@ -18,7 +18,7 @@ arguments = parser.parse_args()
 
 # test_df = pd.read_csv('tr.csv', sep='\t', usecols=['words','labels','sentence_id'])
 # train_df = pd.read_csv('t1.csv', sep='\t', usecols=['words','labels','sentence_id'])
-# val_df = pd.read_csv('val.csv', sep='\t', usecols=['words','labels','sentence_id'])
+val_df = pd.read_csv('val.csv', sep='\t', usecols=['words','labels','sentence_id'])
 
 train_df = pd.read_csv(arguments.train, sep=',', usecols=['words','labels','sentence_id'])
 test_df = pd.read_csv(arguments.test, sep='\t', usecols=['words','labels','sentence_id'])
@@ -59,8 +59,8 @@ model = NERModel(
     args=model_args,
 )
 
-# model.train_model(train_df,eval_df= val_df)
-model.train_model(train_df)
+model.train_model(train_df,eval_df= val_df)
+# model.train_model(train_df)
 # model.save_model()
 print(len(test_df))
 
