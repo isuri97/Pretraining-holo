@@ -21,7 +21,7 @@ arguments = parser.parse_args()
 # val_df = pd.read_csv('val.csv', sep='\t', usecols=['words','labels','sentence_id'])
 
 train_df = pd.read_csv(arguments.train, sep=',', usecols=['words','labels','sentence_id'])
-test_df = pd.read_csv(arguments.test, sep=',', usecols=['words','labels','sentence_id'])
+test_df = pd.read_csv(arguments.test, sep='\t', usecols=['words','labels','sentence_id'])
 
 model_args = NERArgs()
 
